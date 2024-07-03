@@ -5,6 +5,7 @@ import DevJucelio.com.encrypt_api.domain.operation.exceptions.OperationNotFoundE
 import DevJucelio.com.encrypt_api.dto.OperationDTO;
 import DevJucelio.com.encrypt_api.dto.OperationResponseDTO;
 import DevJucelio.com.encrypt_api.repositories.OperationRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -48,5 +49,26 @@ public class OperationService {
         OperationResponseDTO dto = new OperationResponseDTO(operation.getId(), userDocumentHashed, creditCardHashed, operation.getValue());
 
         return dto;
+    }
+    public void delete(Long id) throws  OperationNotFoundException{
+        Operation operation = this.repository.findById(id).orElseThrow(() -> new OperationNotFoundException(id));
+
+        repository.delete(operation);
+    }
+    @Transactional
+    public Operation update(OperationDTO data, Long id) throws  OperationNotFoundException{
+        Operation operation = this.repository.findById(id).orElseThrow(() -> new OperationNotFoundException(id));
+
+        if (data.creditCardToken().isEmpty()){
+            operation.setCreditCardToken(this.encryptService.encryptData(data.creditCardToken()));
+        }
+        if (data.userDocument().isEmpty()){
+            operation.setUserDocument(this.encryptService.encryptData(data.userDocument()));
+        }
+        if (data.operationValue() != null){
+            operation.setValue(data.operationValue());
+        }
+
+        return  operation;
     }
 }

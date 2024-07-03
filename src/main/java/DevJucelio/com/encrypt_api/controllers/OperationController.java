@@ -34,4 +34,18 @@ public class OperationController {
 
         return  ResponseEntity.ok(operation);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+       this.service.delete(id);
+
+
+        return  ResponseEntity.ok().build();
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Operation> update(@RequestBody OperationDTO operationDTO, @PathVariable Long id){
+       Operation updateOperation = this.service.update(operationDTO, id);
+
+
+        return  ResponseEntity.ok(updateOperation);
+    }
 }
