@@ -1,4 +1,4 @@
-package DevJucelio.com.encrypt_api.serviced;
+package DevJucelio.com.encrypt_api.services;
 
 import org.jasypt.util.text.AES256TextEncryptor;
 import org.springframework.stereotype.Service;
